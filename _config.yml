@@ -14,7 +14,7 @@ timezone:
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: ０ｘＹｕｍｅｋｏ # the main title
+title: 𝟘𝕩𝕐𝕦𝕞𝕖𝕜𝕠 # the main title
 
 tagline: 💕 Ｍａｌｗａｒｅ Ｈｕｎｔｅｒ Ｋｉｌｌｅｒ 💕 # it will display as the sub-title
 
@@ -63,8 +63,8 @@ google_analytics:
 #     light  - Use the light color scheme
 #     dark   - Use the dark color scheme
 #
-background_color="default"# The CDN endpoint for images.
-# Notice that once it is assigned, the CDN url
+theme_mode: dark
+
 # will be added to all image (site avatar & posts' images) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
