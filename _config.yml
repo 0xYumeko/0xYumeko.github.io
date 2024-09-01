@@ -63,9 +63,7 @@ google_analytics:
 #     light  - Use the light color scheme
 #     dark   - Use the dark color scheme
 #
-theme_mode: c869bf
-background-color: rgba(255, 255, 128, .5);
-# The CDN endpoint for images.
+background_color="default"# The CDN endpoint for images.
 # Notice that once it is assigned, the CDN url
 # will be added to all image (site avatar & posts' images) paths starting with '/'
 #
