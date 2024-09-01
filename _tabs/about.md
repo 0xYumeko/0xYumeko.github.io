@@ -3,4 +3,5 @@
 icon: fas fa-info-circle
 order: 4
 ---
-CTF player, coder, and malware developer. 💻🌐
+💕 ＣＴＦ ｐｌａｙｅｒ， ， ａｎｄ  ｄｅｖｅｌｏｐｅｒ.  Ｍａｌｗａｒｅ Ｈｕｎｔｅｒ Ｋｉｌｌｅｒ 💕 
+
