@@ -14,27 +14,27 @@ timezone:
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: 0xYumeko # the main title
+title: ０ｘＹｕｍｅｋｏ # the main title
 
-tagline: Cybersecurity, CTF Player # it will display as the sub-title
+tagline: 💕 Ｍａｌｗａｒｅ Ｈｕｎｔｅｒ Ｋｉｌｌｅｒ 💕 # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
-  Cybersecurity, CTF Player
+  💕 Ｍａｌｗａｒｅ Ｈｕｎｔｅｒ Ｋｉｌｌｅｒ 💕
 
 # Fill in the protocol & hostname for your site.
 # e.g. 'https://username.github.io', note that it does not end with a '/'.
 url: "https://0xYumeko.github.io"
 
 github:
-  username: 0xYumeko # change to your github username
+  username: ０ｘＹｕｍｅｋｏ # change to your github username
 
 twitter:
-  username: 0xYumeko # change to your twitter username
+  username: ０ｘＹｕｍｅｋｏ # change to your twitter username
 
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
-  name: 0xYumeko
+  name: ０ｘＹｕｍｅｋｏ
   email: 0xYumeko@domain.com # change to your email address
   links:
     # The first element serves as the copyright owner's link
