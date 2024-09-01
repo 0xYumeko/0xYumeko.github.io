@@ -1,12 +1,5 @@
 # The Site Configuration
 
----
-title: "home"
-bg: white
-color: black
-style: center
----
-
 # Import the theme
 theme: jekyll-theme-chirpy
 
