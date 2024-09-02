@@ -16,10 +16,10 @@ timezone:
 
 title: 𝟘𝕩𝕐𝕦𝕞𝕖𝕜𝕠 # the main title
 
-tagline:  💕 𝙷𝚒 𝚎𝚟𝚎𝚛𝚢𝚘𝚗𝚎! 💕  # it will display as the sub-title
+tagline: Cybersecurity, CTF Player # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
-   💕𝙷𝚒 𝚎𝚟𝚎𝚛𝚢𝚘𝚗𝚎!💕
+  Cybersecurity, CTF Player
 
 # Fill in the protocol & hostname for your site.
 # e.g. 'https://username.github.io', note that it does not end with a '/'.
@@ -65,6 +65,8 @@ google_analytics:
 #
 theme_mode: dark
 
+# The CDN endpoint for images.
+# Notice that once it is assigned, the CDN url
 # will be added to all image (site avatar & posts' images) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
