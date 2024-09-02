@@ -8,5 +8,5 @@ pin: false
 math: true
 mermaid: true
 image:
-  path: /assets/img/L3ak-CTF/privesc_win.gif
+  path: /assets/img/L3ak-CTF/privesc_win.png
 ---
