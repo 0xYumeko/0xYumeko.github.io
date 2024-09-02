@@ -28,3 +28,24 @@ echo "$IP l3ak.thm" | sudo tee -a  /etc/hosts
 <h1>1 Start with an Nmap Scan:</h1>
 
 Use Nmap to scan the target for open ports and services.
+
+```bash
+nmap -sC -sV -oN nmap_scan <target_ip>
+```
+
+![2](https://github.com/user-attachments/assets/3233d41f-880b-435f-8cd5-a5860e5f3e57)
+
+
+The output will show you which ports are open and the services running on those ports.
+
+<h1>Examine the Web Server:</h1>
+
+If HTTP/HTTPS ports (80/443) are open, open the website in a browser.
+Use tools like gobuster or dirb to find hidden directories.
+
+```bash
+gobuster dir -u http://<target_ip> -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+```
+
+![3](https://github.com/user-attachments/assets/f1e61e4b-0373-4e53-a089-b59b063efa7b)
+
