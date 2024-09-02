@@ -10,3 +10,8 @@ mermaid: true
 image:
   path: /assets/img/posts/L3ak-CTF/privesc_linux.png
 ---
+
+The L3ak_CTF on TryHackMe is a Capture the Flag (CTF) challenge that focuses on testing a participant’s skills in identifying and exploiting information leaks, basic web vulnerabilities, and other security issues. Here’s a walkthrough of the key steps to solve the challenge.
+
+<h1>Step 1: Enumeration</h1>
+. Adding registries to your /etc/hosts file makes it easier for machines to remember and learn by their unique names rather than their IP addresses. It also helps in cases where a DNS resolution may not be available or reliable
