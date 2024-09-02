@@ -20,7 +20,6 @@ The L3ak_CTF on TryHackMe is a Capture the Flag (CTF) challenge that focuses on 
 
 ```
 echo "$IP l3ak.thm" | sudo tee -a  /etc/hosts
-
 ```
 
 
