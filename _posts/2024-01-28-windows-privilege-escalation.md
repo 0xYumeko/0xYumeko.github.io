@@ -35,3 +35,73 @@ Wa7d l ihtiyatiya qder ta3mlha hya encrypti l password wla tist3ml hashing techn
 ![2024-09-02_14-49](https://github.com/user-attachments/assets/fb03ba2f-649f-412b-94d0-df0c906716be)
 
 
+Kayn bzzaf dyal tori9 bach tmodifi l'program wla tkhaddam chi technique bach tsayb wla tkhallath b chi 7aja 
+<h1>examples : </h1>
+
+<h1>Changement dyal password storage :</h1> T9der tghattay l password lli mkhbay f source code bach matbanach directly  Example: t7awal tpartajiha 3la bytes mn b3d tjoinhom bach t9arnha m3 l input.
+
+```java
+public boolean checkPassword(String password) {
+    char[] pass = { 'w', '4', 'r', 'm', '1', 'n', 'g', '_', 'U', 'p', '_', 'w', '1', 't', 'H', '_', 'j', 'A', 'v', '4', '_', '3', '8', '0', '8', 'd', '3', '3', '8', 'b', '4', '6' };
+    return password.equals(new String(pass));
+}
+```
+
+<h1>Encoding :</h1>  T9der tktb password f encoded format  b7al Base64  o mn b3d tdecodeha bash tchouf ila s7i7a.
+
+```java
+import java.util.Base64;
+
+public boolean checkPassword(String password) {
+    String encodedPass = "dzRybTFuZ19VcF93MXRIX2pBdjRfMzgwOGQzMzhiNDY=";
+    byte[] decodedBytes = Base64.getDecoder().decode(encodedPass);
+    String decodedPass = new String(decodedBytes);
+    return password.equals(decodedPass);
+}
+```
+
+<h1>2. Adding a Fake Password :</h1>
+
+
+<h1>Distracting attackers :</h1> T9der tzd l password mokhtalfa bash la7d mn akhadh l source code ythayeb  y3ni y7ssb ra dkhal password s7i7a wma kanch. 
+
+<h1>Example :</h1>
+
+```java
+public boolean checkPassword(String password) {
+    String fakePassword = "fakePassword";
+    if (password.equals(fakePassword)) {
+        System.out.println("Access denied! (Fake)");
+        return false;
+    }
+    return password.equals("w4rm1ng_Up_w1tH_jAv4_3808d338b46");
+}
+```
+
+<h1>3. Change the Access Logic :</h1>
+Reversing the condition: Ila bghiti tdrab chi wahd l3moq  t9der tkhrba9 l logic b7al t9ul password li mahya s7i7a hiya lli t3tih access. 
+
+<h1>Example :</h1>
+
+```java
+public boolean checkPassword(String password) {
+    return !password.equals("w4rm1ng_Up_w1tH_jAv4_3808d338b46");
+}
+```
+Hadi t9der tfidk fi chi context lli bghiti t7ammi code mn attackers.
+
+
+<h1>4. Multiple Passwords :</h1>
+Dynamic or Multiple Passwords: T9der tkhdam 3la l program lli ykhdam m3 passwords mokhtalfa wla tbda password m3 kol session wla dayman.
+
+
+```java
+public boolean checkPassword(String password) {
+    List<String> validPasswords = Arrays.asList("w4rm1ng_Up_w1tH_jAv4_3808d338b46", "an0ther_Val1d_Pass");
+    return validPasswords.contains(password);
+}
+```
+
+
+
+
