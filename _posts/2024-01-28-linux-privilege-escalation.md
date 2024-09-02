@@ -16,6 +16,8 @@ The L3ak_CTF on TryHackMe is a Capture the Flag (CTF) challenge that focuses on 
 <h1>Step 1: Enumeration</h1>
 . Adding registries to your /etc/hosts file makes it easier for machines to remember and learn by their unique names rather than their IP addresses. It also helps in cases where a DNS resolution may not be available or reliable
 
+
+
 ```
 echo "$IP l3ak.thm" | sudo tee -a  /etc/hosts
 
