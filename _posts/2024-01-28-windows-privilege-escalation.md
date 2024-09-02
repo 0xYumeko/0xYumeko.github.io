@@ -10,3 +10,18 @@ mermaid: true
 image:
   path: /assets/img/untitled%20folder/banner.jpg
 ---
+
+Lcode lli drt hwa wa7d limplementation dyal wa7d lprogram b Java lli kaycheck password l iuser, bach idir “access granted” ila password s7i7a.
+
+Hada l program mkatmchi password f source code  w hadchi kaykhdm bach tchouf ila user dakhal password s7i7a.
+
+<h1>Walkthrough :</h1>
+
+<h1>1. User Input : </h1> L program kaytleb men user yedkhel password  Password khas ykoun f lformat : picoCTF{password}.
+
+<h1>Extracting Password :</h1> L program kay7yid picoCTF{ mn l 9dam w } mn l akhr dial input w khassu ykhli password s7i7i.
+
+<h1>Password Check :</h1> L program kayqarn password l iuser dkhalha m3 wa7da mokhtabiya f source code lli hya "w4rm1ng_Up_w1tH_jAv4_3808d338b46".
+
+<h1>Result :</h1> Ila dakhal user password s7i7a, y9oul l program “Access granted”. Ila la, y9oul “Access denied!”.
+
