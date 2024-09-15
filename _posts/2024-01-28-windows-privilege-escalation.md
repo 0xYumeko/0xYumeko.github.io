@@ -8,7 +8,7 @@ pin: false
 math: true
 mermaid: true
 image:
-  path: assets/img/untitled folder/banner.png
+  path: assets/img/untitled&folder/banner.png
 ---
 
 Lcode lli drt hwa wa7d limplementation dyal wa7d lprogram b Java lli kaycheck password l iuser, bach idir “access granted” ila password s7i7a.
